@@ -1,20 +1,32 @@
-import Address from "../../@shared/domain/value-object/address"
-import InvoiceItem from "../domain/invoiceItem"
+type InvoiceItemDto = {
+  id: string
+  name: string
+  price: number
+}
+
+type AddressDto = {
+  street: string
+  number: string
+  complement: string
+  city: string
+  state: string
+  zipCode: string
+}
 
 export interface GenerateInvoiceFacadeInputDto {
   id: string
   name: string
   document: string
-  address: Address
-  items: InvoiceItem[]
+  address: AddressDto
+  items: InvoiceItemDto[]
 }
 
 export interface GenerateInvoiceFacadeOutputDto {
   id: string
   name: string
   document: string
-  address: Address
-  items: InvoiceItem[]
+  address: AddressDto
+  items: InvoiceItemDto[]
   createdAt: Date
   updatedAt: Date
 }
@@ -27,8 +39,8 @@ export interface FindInvoiceFacadeOutputDto {
   id: string
   name: string
   document: string
-  address: Address
-  items: InvoiceItem[]
+  address: AddressDto
+  items: InvoiceItemDto[]
   createdAt: Date
   updatedAt: Date
 }

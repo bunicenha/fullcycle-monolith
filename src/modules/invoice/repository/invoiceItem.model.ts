@@ -16,7 +16,7 @@ export class InvoiceItemModel extends Model {
   @Column({ allowNull: false })
   price: number
 
-  @ForeignKey(() => InvoiceItemModel)
+  @ForeignKey(() => InvoiceModel)
   @Column({ allowNull: false })
   invoiceId: string
 }

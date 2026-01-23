@@ -28,36 +28,38 @@ export default class InvoiceRepository implements InvoiceGateway {
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt
+    }, {
+      include: [InvoiceItemModel]
     })
   }
 
   async find(id: string): Promise<Invoice> {
 
-    const client = await InvoiceModel.findOne({ where: { id }, include: [InvoiceItemModel] })
+    const invoice = await InvoiceModel.findOne({ where: { id }, include: [InvoiceItemModel] })
 
-    if (!client) {
-      throw new Error("Client not found")
+    if (!invoice) {
+      throw new Error("Invoice not found")
     }
 
     return new Invoice({
-      id: new Id(client.id),
-      name: client.name,
-      document: client.document,
+      id: new Id(invoice.id),
+      name: invoice.name,
+      document: invoice.document,
       address: new Address(
-        client.street,
-        client.number,
-        client.complement,
-        client.city,
-        client.state,
-        client.zipcode,
+        invoice.street,
+        invoice.number,
+        invoice.complement,
+        invoice.city,
+        invoice.state,
+        invoice.zipcode,
       ),
-      items: client.items.map(item => new InvoiceItem({
+      items: invoice.items.map(item => new InvoiceItem({
         id: new Id(item.id),
         name: item.name,
         price: item.price,
       })),
-      createdAt: client.createdAt,
-      updatedAt: client.createdAt
+      createdAt: invoice.createdAt,
+      updatedAt: invoice.updatedAt
     })
   }
 }

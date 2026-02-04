@@ -8,7 +8,6 @@ import StoreCatalogFacade from "../../../store-catalog/facade/store-catalog.faca
 import Client from "../../domain/client.entity";
 import Order from "../../domain/order.entity";
 import Product from "../../domain/product.entity";
-import CheckoutGateway from "../../gateway/checkout.gateway";
 import { PlaceOrderInputDto, PlaceOrderOutputDto } from "./place-order.dto";
 
 export default class PlaceOrderUseCase implements UseCaseInterface {
@@ -17,7 +16,6 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
   private _catalogFacade: StoreCatalogFacade;
   private _paymentFacade: PaymentFacadeInterface;
   private _invoiceFacade: InvoiceFacadeInterface;
-  private _repository: CheckoutGateway;
 
   constructor(
     clientFacade: ClientAdmFacadeInterface,
@@ -25,14 +23,12 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
     catalogFacade: StoreCatalogFacade,
     paymentFacade: PaymentFacadeInterface,
     invoiceFacade: InvoiceFacadeInterface,
-    repository: CheckoutGateway
   ) {
     this._clientFacade = clientFacade;
     this._productFacade = productFacade;
     this._catalogFacade = catalogFacade;
     this._paymentFacade = paymentFacade;
     this._invoiceFacade = invoiceFacade;
-    this._repository = repository;
   }
 
   async execute(input: PlaceOrderInputDto): Promise<PlaceOrderOutputDto> {
@@ -93,11 +89,10 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
 
     payment.status === "approved" && order.approved();
 
-    await this._repository.addOrder(order);
-
     return {
       id: order.id.id,
       total: order.total,
+      ...(invoice ? { invoice: { id: invoice.id } } : null), 
       products: order.products.map((p) => {
         return {
           productId: p.id.id,

@@ -23,6 +23,82 @@ cd fullcycle-monolith
 npm install
 ```
 
+## 🖥️ Executando a Aplicação
+
+### Modo Produção
+
+```bash
+npm start
+```
+
+### Modo Desenvolvimento (com hot reload)
+
+```bash
+npm run dev
+```
+
+A aplicação estará disponível em `http://localhost:3000`
+
+## 📚 API Documentation (Swagger)
+
+Acesse a documentação da API em: `http://localhost:3000/api-docs`
+
+### Endpoints Disponíveis
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/products` | Criar um novo produto |
+| POST | `/clients` | Criar um novo cliente |
+| POST | `/checkout` | Realizar um pedido (place order) |
+| GET | `/invoice/:id` | Buscar uma invoice pelo ID |
+
+### Exemplos de Requisições
+
+#### POST /products
+```json
+{
+  "id": "1",
+  "name": "Product 1",
+  "description": "Product description",
+  "purchasePrice": 100,
+  "salesPrice": 150,
+  "stock": 10
+}
+```
+
+#### POST /clients
+```json
+{
+  "id": "1",
+  "name": "John Doe",
+  "email": "john@email.com",
+  "document": "123.456.789-00",
+  "address": {
+    "street": "Main Street",
+    "number": "100",
+    "complement": "Apt 1",
+    "city": "São Paulo",
+    "state": "SP",
+    "zipCode": "01001-000"
+  }
+}
+```
+
+#### POST /checkout
+```json
+{
+  "clientId": "1",
+  "products": [
+    { "productId": "1" }
+  ]
+}
+```
+
+#### GET /invoice/:id
+```
+GET /invoice/abc-123-def-456
+```
+
 ## 🧪 Executando os Testes
 
 O projeto utiliza Jest como framework de testes com SWC para transformação rápida do código TypeScript.
@@ -62,3 +138,33 @@ npm test -- store-catalog
 ```bash
 npm test -- add-client.usecase.spec.ts
 ```
+
+## 🏗️ Arquitetura
+
+O projeto segue os princípios de Domain-Driven Design (DDD) e Clean Architecture:
+
+```
+src/
+├── application/          # Camada de aplicação (API REST)
+│   ├── database/         # Configuração do banco de dados
+│   ├── routes/           # Rotas da API
+│   ├── app.ts            # Configuração do Express
+│   └── server.ts         # Entry point da aplicação
+│
+└── modules/              # Módulos de domínio
+    ├── @shared/          # Componentes compartilhados
+    ├── checkout/         # Módulo de checkout (place order)
+    ├── client-adm/       # Módulo de administração de clientes
+    ├── invoice/          # Módulo de invoices
+    ├── payment/          # Módulo de pagamentos
+    ├── product-adm/      # Módulo de administração de produtos
+    └── store-catalog/    # Módulo de catálogo de produtos
+```
+
+Cada módulo segue a estrutura:
+- `domain/` - Entidades e regras de negócio
+- `gateway/` - Interfaces de repositório (portas)
+- `repository/` - Implementações de repositório (adaptadores)
+- `usecase/` - Casos de uso (camada de aplicação)
+- `facade/` - API pública do módulo
+- `factory/` - Fábricas para criação de facades

@@ -8,6 +8,9 @@ export interface PlaceOrderInputDto {
 export interface PlaceOrderOutputDto {
   id: string;
   total: number;
+  invoice?: {
+    id: string;
+  };
   products: {
     productId: string;
   }[];

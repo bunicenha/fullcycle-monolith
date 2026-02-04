@@ -215,11 +215,6 @@ describe("PlaceOrder UseCase unit test", () => {
         process: jest.fn(),
       };
 
-      const mockCheckoutRepository = {
-        addOrder: jest.fn(),
-        findOrder: jest.fn(),
-      };
-
       const mockInvoiceFacade = {
         generate: jest.fn().mockResolvedValue({ id: "1i" }),
         find: jest.fn(),
@@ -271,7 +266,6 @@ describe("PlaceOrder UseCase unit test", () => {
           mockCatalogFacade as unknown as StoreCatalogFacade,
           mockPaymentFacade,
           mockInvoiceFacade,
-          mockCheckoutRepository
         );
 
         const input = {
@@ -290,7 +284,6 @@ describe("PlaceOrder UseCase unit test", () => {
         expect(mockClientFacade.find).toHaveBeenCalledWith({ id: "1c" });
         expect(mockProductFacade.checkStock).toHaveBeenCalledTimes(2);
         expect(mockCatalogFacade.find).toHaveBeenCalledTimes(2);
-        expect(mockCheckoutRepository.addOrder).toHaveBeenCalledTimes(1);
         expect(mockPaymentFacade.process).toHaveBeenCalledTimes(1);
         expect(mockPaymentFacade.process).toHaveBeenCalledWith({
           orderId: output.id,
@@ -313,7 +306,6 @@ describe("PlaceOrder UseCase unit test", () => {
         mockClientFacade.find.mockClear();
         mockProductFacade.checkStock.mockClear();
         mockCatalogFacade.find.mockClear();
-        mockCheckoutRepository.addOrder.mockClear();
         mockPaymentFacade.process.mockClear();
         mockInvoiceFacade.generate.mockClear();
 
@@ -323,7 +315,6 @@ describe("PlaceOrder UseCase unit test", () => {
           mockCatalogFacade as unknown as StoreCatalogFacade,
           mockPaymentFacade,
           mockInvoiceFacade,
-          mockCheckoutRepository
         );
 
         const input = {
@@ -342,7 +333,6 @@ describe("PlaceOrder UseCase unit test", () => {
         expect(mockClientFacade.find).toHaveBeenCalledWith({ id: "1c" });
         expect(mockProductFacade.checkStock).toHaveBeenCalledTimes(2);
         expect(mockCatalogFacade.find).toHaveBeenCalledTimes(2);
-        expect(mockCheckoutRepository.addOrder).toHaveBeenCalledTimes(1);
         expect(mockPaymentFacade.process).toHaveBeenCalledTimes(1);
         expect(mockPaymentFacade.process).toHaveBeenCalledWith({
           orderId: output.id,
